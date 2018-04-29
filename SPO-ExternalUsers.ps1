@@ -9,8 +9,6 @@ Param(
 $cred = Get-AutomationPSCredential -Name 'SharePointingUKAdmin'
 Connect-SPOService -Url $AdminUrl $cred
 
-$siteurl = 'https://sharepointinguk.sharepoint.com/sites/admin'
-
 if ($siteurl -eq "*") {
     $SiteCollections = Get-SPOSite -Limit All
 }
