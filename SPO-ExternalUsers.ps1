@@ -3,7 +3,7 @@ Param(
     [string]$AdminUrl = "https://sharepointinguk-admin.sharepoint.com/",
 	
     [Parameter(Mandatory = $False)]
-    [string]$siteurl = "*"
+    [string]$siteurl = ""
 )
 
 $cred = Get-AutomationPSCredential -Name 'SharePointingUKAdmin'
@@ -17,13 +17,9 @@ $UserDetailsObj = @{
 $ExternalUsers = New-Object psobject $UserDetailsObj
 $FinalObject = New-Object psobject $UserDetailsObj
 
-if ($siteurl -eq "*") {
-    $SiteCollections = Get-SPOSite -Limit All
-}
-else {
-    $SiteCollections = Get-SPOSite -Identity $siteurl
+$SiteCollections = Get-SPOSite -Identity $siteurl
 
-}
+
 $ExternalUsers.Clear()
 foreach ($site in $SiteCollections) {
     [array]$ExternalUsers += Get-SPOUser -Limit All -Site $site.Url `
