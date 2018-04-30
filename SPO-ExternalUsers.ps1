@@ -33,7 +33,8 @@ foreach ($site in $SiteCollections) {
     }
     $UserDetailsObj.Details = $ExternalUsers
     $UserDetailsObj.UserCount = $ExternalUsers.LoginName.Count
+    $NewUserDetailsObj = $UserDetailsObj.Details | Where-Object { $_ -ne 'null' }
     
 }
 
-Write-Output ( $UserDetailsObj | ConvertTo-Json)
+Write-Output ( $NewUserDetailsObj | ConvertTo-Json)
