@@ -16,7 +16,6 @@ $UserDetailsObj = @{
 
 $ExternalUsers = New-Object psobject -Property $UserDetailsObj
 
-
 if ($siteurl -eq "*") {
     $SiteCollections = Get-SPOSite -Limit All
 }
