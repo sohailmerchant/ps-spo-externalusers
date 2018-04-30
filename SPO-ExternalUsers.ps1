@@ -14,7 +14,8 @@ $UserDetailsObj = @{
     'Details'   = ''
 }
 
-$ExternalUsers = New-Object psobject -Property $UserDetailsObj
+$ExternalUsers = New-Object psobject $UserDetailsObj
+$FinalObject = New-Object psobject $UserDetailsObj
 
 if ($siteurl -eq "*") {
     $SiteCollections = Get-SPOSite -Limit All
@@ -32,9 +33,11 @@ foreach ($site in $SiteCollections) {
     
     }
     $UserDetailsObj.Details = $ExternalUsers
-    $UserDetailsObj.UserCount = $ExternalUsers.LoginName.Count
-    $NewUserDetailsObj = $UserDetailsObj.Details | Where-Object { $_ -ne 'null' }
-    
-}
+    $FinalObject.Details = $UserDetailsObj.Details | Where-Object { $_ -ne $null }
+    $FinalObject.UserCount = $ExternalUsers.LoginName.Count
 
-Write-Output ( $NewUserDetailsObj | ConvertTo-Json)
+       
+} 
+   
+Write-Output ( $FinalObject | ConvertTo-Json)
+
