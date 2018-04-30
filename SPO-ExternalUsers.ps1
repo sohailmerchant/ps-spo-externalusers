@@ -9,6 +9,14 @@ Param(
 $cred = Get-AutomationPSCredential -Name 'SharePointingUKAdmin'
 Connect-SPOService -Url $AdminUrl $cred
 
+$UserDetailsObj = @{
+    'UserCount' = 0;
+    'Details'   = ''
+}
+
+$ExternalUsers = New-Object psobject -Property $UserDetailsObj
+
+
 if ($siteurl -eq "*") {
     $SiteCollections = Get-SPOSite -Limit All
 }
@@ -20,9 +28,13 @@ $ExternalUsers.Clear()
 foreach ($site in $SiteCollections) {
     [array]$ExternalUsers += Get-SPOUser -Limit All -Site $site.Url `
         | Where-Object {$_.LoginName -like "*urn:spo:guest*" -or $_.LoginName -like "*#ext#*"} `
-        | Select-Object DisplayName, LoginName, @{Name = "Site" ; Expression = { $site }
+        | Select-Object  DisplayName, LoginName, @{Name = "Site" ; Expression = {$site.Url}},
+    @{Name = "Title" ; Expression = {$site.Title}`
+    
     }
-
+    $UserDetailsObj.Details = $ExternalUsers
+    $UserDetailsObj.UserCount = $ExternalUsers.LoginName.Count
+    
 }
 
-Write-Output ( $ExternalUsers | ConvertTo-Json)
+Write-Output ( $UserDetailsObj | ConvertTo-Json)
